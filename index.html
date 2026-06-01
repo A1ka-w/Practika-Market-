@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#2d0a4a" />
+  <title>NIMMI — каталог</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon: #39ff14;
+      --green-header: #4ade80;
+      --green-btn: #22c55e;
+      --purple-deep: #1e0b3a;
+      --purple-mid: #5b21b6;
+      --btn-purple: #9333ea;
+      --btn-purple-hover: #7e22ce;
+      --price-bg: #fde047;
+      --price-text: #dc2626;
+      --nav-bg: #0a0a0a;
+      --nav-ink: #f1f5f9;
+      --nav-muted: rgba(241, 245, 249, 0.55);
+      --nav-active: #f472b6;
+      --splash-dark: #052e16;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --content-max: 1280px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      color: #f8fafc;
+      -webkit-font-smoothing: antialiased;
+      background: linear-gradient(180deg, var(--neon) 0%, #16a34a 14%, var(--purple-mid) 48%, var(--purple-deep) 100%);
+      background-attachment: fixed;
+      min-height: 100%;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--neon);
+      outline-offset: 2px;
+    }
+
+    .app-frame {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(8px, 4vw, 48px);
+      padding: 12px 20px;
+      background: var(--nav-bg);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .top-nav.is-hidden {
+      display: none;
+    }
+
+    .top-nav__inner {
+      width: 100%;
+      max-width: var(--content-max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav__brand {
+      font-family: "Inter", sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      font-size: 0.95rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .top-nav__tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      color: var(--nav-muted);
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    .nav-tab svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.75;
+    }
+
+    .nav-tab:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-tab.is-current {
+      color: var(--nav-active);
+    }
+
+    .nav-tab.is-current svg {
+      stroke: var(--nav-active);
+    }
+
+    .main-area {
+      flex: 1;
+      width: 100%;
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: clamp(16px, 2.5vw, 32px);
+      display: flex;
+      flex-direction: column;
+      min-height: min(100vh, 100%);
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      animation: fadeIn 0.28s ease;
+    }
+
+    .screen.is-active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .screen {
+        animation: none;
+      }
+    }
+
+    .screen--splash {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 24px;
+      background: linear-gradient(180deg, #0d4d2c 0%, #020617 100%);
+    }
+
+    .logo-ring {
+      width: min(240px, 40vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      margin-bottom: auto;
+      margin-top: 8vh;
+    }
+
+    .logo-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .logo-ring h1 {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #fff;
+    }
+
+    .logo-icons {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .btn-go {
+      width: min(360px, 90vw);
+      padding: 18px 28px;
+      border-radius: var(--radius-lg);
+      background: var(--btn-purple);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 14px 40px rgba(147, 51, 234, 0.45);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-go:hover {
+      background: var(--btn-purple-hover);
+    }
+
+    .btn-go:active {
+      transform: scale(0.98);
+    }
+
+    .page-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 56px;
+      padding: 0 18px;
+      margin-bottom: 20px;
+      border-radius: 999px;
+      background: var(--green-header);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    .page-head--center {
+      justify-content: center;
+    }
+
+    .page-head h2 {
+      margin: 0;
+      flex: 1;
+      text-align: center;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.25rem, 2vw, 1.6rem);
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .page-head h2:not(:only-child) {
+      padding-right: 44px;
+    }
+
+    .page-head .icon-btn {
+      background: rgba(5, 46, 22, 0.28);
+      color: #fff;
+    }
+
+    .page-head .icon-btn:hover {
+      background: rgba(5, 46, 22, 0.42);
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(15, 23, 42, 0.08);
+      color: #0f172a;
+      flex-shrink: 0;
+    }
+
+    .icon-btn:hover {
+      background: rgba(15, 23, 42, 0.14);
+    }
+
+    .scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 24px;
+    }
+
+    .grid-cats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    @media (min-width: 1100px) {
+      .grid-cats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .cat-card {
+      display: flex;
+      align-items: stretch;
+      gap: 16px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      background: rgba(15, 23, 42, 0.28);
+      backdrop-filter: blur(12px);
+      text-align: left;
+      width: 100%;
+      min-height: 120px;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .cat-card:hover {
+      border-color: rgba(255, 255, 255, 0.85);
+      transform: translateY(-2px);
+    }
+
+    .cat-thumb {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .cat-thumb--emoji {
+      display: grid;
+      place-items: center;
+      font-size: 3rem;
+    }
+
+    .cat-title-h {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      text-align: left;
+      padding-left: 4px;
+    }
+
+    .grid-rows {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    @media (min-width: 1200px) {
+      .grid-rows {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(15, 23, 42, 0.25);
+      backdrop-filter: blur(8px);
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .list-row:hover {
+      background: rgba(15, 23, 42, 0.4);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .row-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .row-thumb--emoji {
+      display: grid;
+      place-items: center;
+      font-size: 1.85rem;
+    }
+
+    .row-text {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #f8fafc;
+    }
+
+    .row-meta {
+      margin-left: auto;
+      font-weight: 600;
+      color: rgba(248, 250, 252, 0.75);
+      font-size: 0.9rem;
+    }
+
+    .product-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(20px, 3vw, 40px);
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .product-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-img {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      display: block;
+      background: rgba(0, 0, 0, 0.35);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .detail-body h3 {
+      margin: 0 0 16px;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .detail-body p {
+      margin: 0 0 24px;
+      color: rgba(248, 250, 252, 0.88);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .price-tag {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      background: var(--price-bg);
+      color: var(--price-text);
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .btn-cart {
+      padding: 16px 28px;
+      border-radius: 999px;
+      background: var(--green-btn);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      box-shadow: 0 10px 32px rgba(34, 197, 94, 0.4);
+      transition: background 0.15s ease, transform 0.12s ease;
+    }
+
+    .btn-cart:hover {
+      background: #16a34a;
+    }
+
+    .btn-cart:active {
+      transform: scale(0.98);
+    }
+
+    .profile-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 28px;
+      object-fit: cover;
+      border: 4px solid rgba(255, 255, 255, 0.5);
+      display: block;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-menu {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(10px);
+    }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      text-align: left;
+      font-size: 1rem;
+      transition: background 0.12s ease;
+    }
+
+    .profile-row:last-child {
+      border-bottom: none;
+    }
+
+    .profile-row:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .profile-row span.icon {
+      font-size: 1.35rem;
+      width: 32px;
+      text-align: center;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 48px 24px;
+      border-radius: var(--radius-lg);
+      border: 2px dashed rgba(255, 255, 255, 0.35);
+      background: rgba(15, 23, 42, 0.2);
+    }
+
+    .cart-empty .big-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+
+    .cart-empty p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: rgba(248, 250, 252, 0.9);
+      max-width: 420px;
+      margin-inline: auto;
+      line-height: 1.55;
+    }
+
+    .cart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(15, 23, 42, 0.3);
+      position: relative;
+    }
+
+    .cart-item img,
+    .cart-item .emoji {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .cart-item .emoji {
+      display: grid;
+      place-items: center;
+      font-size: 1.75rem;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .cart-item .name {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      flex: 1;
+    }
+
+    .cart-item .price {
+      font-weight: 700;
+      color: var(--price-bg);
+    }
+
+    .cart-item .delete-item-btn {
+      background: rgba(220, 38, 38, 0.8);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-left: 12px;
+    }
+
+    .cart-item .delete-item-btn:hover {
+      background: #dc2626;
+    }
+
+    .cart-total {
+      margin-top: 20px;
+      padding: 16px;
+      text-align: right;
+      border-top: 2px solid rgba(255, 255, 255, 0.2);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .cart-total span {
+      color: var(--price-bg);
+      font-size: 1.4rem;
+    }
+
+    .search-panel {
+      max-width: 640px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .search-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: rgba(248, 250, 252, 0.85);
+      margin-bottom: 8px;
+    }
+
+    .search-field {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      background: rgba(15, 23, 42, 0.45);
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .search-field::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .search-hint {
+      margin: 10px 0 16px;
+      font-size: 0.88rem;
+      color: rgba(248, 250, 252, 0.72);
+    }
+
+    .search-results {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-hit {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(15, 23, 42, 0.38);
+      text-align: left;
+      color: #f8fafc;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .search-hit:hover {
+      background: rgba(15, 23, 42, 0.55);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .search-hit__title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.03em;
+    }
+
+    .search-hit__meta {
+      font-size: 0.82rem;
+      color: rgba(248, 250, 252, 0.65);
+    }
+
+    .search-empty {
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: rgba(248, 250, 252, 0.75);
+      font-size: 0.95rem;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 32px;
+      transform: translateX(-50%) scale(0.96);
+      background: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 300;
+      max-width: min(90vw, 480px);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-frame" id="app">
+    <nav class="top-nav is-hidden" id="topNav" aria-label="Главное меню">
+      <div class="top-nav__inner">
+        <span class="top-nav__brand">NIMMI</span>
+        <div class="top-nav__tabs">
+          <button type="button" class="nav-tab is-current" data-tab="catalog" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round" />
+            </svg>
+            Каталог
+          </button>
+          <button type="button" class="nav-tab" data-tab="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke-width="2" />
+              <path d="M20 20l-3-3" stroke-linecap="round" stroke-width="2" />
+            </svg>
+            Поиск
+          </button>
+          <button type="button" class="nav-tab" data-tab="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+              <path d="M4 21a8 8 0 0116 0" stroke-linecap="round" />
+            </svg>
+            Профиль
+          </button>
+          <button type="button" class="nav-tab" data-tab="cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <circle cx="9" cy="20" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="18" cy="20" r="1.5" fill="currentColor" stroke="none" />
+              <path d="M3 4h2l1 12h12l2-9H6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Корзина
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-area">
+      <!-- Splash -->
+      <section class="screen screen--splash is-active" id="screen-splash" aria-label="Приветствие">
+        <div class="logo-ring">
+          <img src="https://cdn.discordapp.com/attachments/1286992188302950474/1509177906633642084/image.png?ex=6a183af4&is=6a16e974&hm=6e712bd7a8153f8eda9619cc1c9de0af0652acbe21d21b68befc1fae1866f349&" alt="NIMMI Logo" />
+        </div>
+        <button type="button" class="btn-go" data-action="enter">Погнали</button>
+      </section>
+
+      <!-- Каталог -->
+      <section class="screen" id="screen-catalog" aria-label="Каталог">
+        <header class="page-head page-head--center">
+          <h2>Каталог</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-cats">
+            <button type="button" class="cat-card" data-nav="fruits">
+              <img class="cat-thumb" src="https://i.pinimg.com/736x/fa/5a/1b/fa5a1b50491bd61fb2909d30b82ca252.jpg" alt="Фрукты" loading="lazy" />
+              <div class="cat-title-h">Фрукты</div>
+            </button>
+            <button type="button" class="cat-card" data-nav="vegetables">
+              <img class="cat-thumb" src="https://i1-c.pinimg.com/1200x/f9/ce/6b/f9ce6b6ce9140da9179756227f615535.jpg" alt="Овощи" loading="lazy" />
+              <div class="cat-title-h">Овощи</div>
+            </button>
+            <button type="button" class="cat-card" data-nav="bakery">
+              <img class="cat-thumb" src="https://i1-c.pinimg.com/1200x/a8/25/d4/a825d4379809657ef57af5d3f45aa825.jpg" alt="Выпечка" loading="lazy" />
+              <div class="cat-title-h">Выпечка</div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Фрукты -->
+      <section class="screen" id="screen-fruits" aria-label="Фрукты">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="catalog" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Фрукты</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="apples">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/74/7a/57/747a579e94b2f6f082d9d4147365f942.jpg" alt="" loading="lazy" />
+              <span class="row-text">Яблоки</span>
+            </button>
+            <button type="button" class="list-row" data-nav="bananasSection">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/1200x/7b/25/69/7b256981452a51c3af7461092b2ad6dd.jpg" alt="" loading="lazy" />
+              <span class="row-text">Бананы</span>
+            </button>
+            <button type="button" class="list-row" data-nav="pears">
+              <img class="row-thumb" src="https://i.pinimg.com/736x/5d/5e/95/5d5e95a9d263532c7bcc5e9a40a6a8a8.jpg" alt="" loading="lazy" />
+              <span class="row-text">Груши</span>
+            </button>
+            <button type="button" class="list-row" data-nav="cherry">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/3a/6e/6e/3a6e6e6ac6532ed132aae26c1f25f06b.jpg" alt="" loading="lazy" />
+              <span class="row-text">Черешня</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Яблоки -->
+      <section class="screen" id="screen-apples" aria-label="Яблоки">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="fruits" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Яблоки</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="gala">
+              <img class="row-thumb" src="https://i.pinimg.com/736x/e6/68/84/e66884c2e2c257fac533eaa4f24624ab.jpg" alt="" loading="lazy" />
+              <span class="row-text">Гала</span>
+              <span class="row-meta">350 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="golden">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/1200x/f1/6e/55/f16e5557bcf778db887703cc9db27f30.jpg" alt="" loading="lazy" />
+              <span class="row-text">Голден</span>
+              <span class="row-meta">400 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="antonovka">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/ed/4f/ee/ed4feed9ac3d7631e24aa3456bcbf7e3.jpg" alt="" loading="lazy" />
+              <span class="row-text">Антоновка</span>
+              <span class="row-meta">380 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- БАНАНЫ -->
+      <section class="screen" id="screen-bananasSection" aria-label="Бананы">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="fruits" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Бананы</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="bananaCavendish">
+              <img class="row-thumb" src="https://i.pinimg.com/736x/05/db/67/05db67e604541d3df9ea3706260db17d.jpg" alt="" loading="lazy" />
+              <span class="row-text">Кавендиш</span>
+              <span class="row-meta">120 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="bananaMini">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509166486269464617/b802d4fb1b5d435c73c30538214ad750.png?ex=6a183051&is=6a16ded1&hm=66616fa5265edc27934cbbdca67c2e31979ca795cdd0b56100d81cfa3f364c03&" alt="" loading="lazy" />
+              <span class="row-text">Мини-бананы</span>
+              <span class="row-meta">180 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="bananaRed">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509166677869334638/04dca3eb5f2ed7b044bc2907182eb33f.png?ex=6a18307e&is=6a16defe&hm=17b251e6d7b15f1c1300235f4407b8907a8fa79e75ccce6c32d69345fa33a176&" alt="" loading="lazy" />
+              <span class="row-text">Красные бананы</span>
+              <span class="row-meta">250 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Груши -->
+      <section class="screen" id="screen-pears" aria-label="Груши">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="fruits" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Груши</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="conference">
+              <img class="row-thumb" src="https://avatars.mds.yandex.net/i?id=5a932a1a3eec507f7108b98897ef01f55920642d-10027404-images-thumbs&n=13" alt="" loading="lazy" />
+              <span class="row-text">Конференция</span>
+              <span class="row-meta">250 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="williams">
+              <img class="row-thumb" src="https://media.vprok.ru/products/x1400/ii/7z/koxqrpy346a2l2kk6ioxwhuw27mu7zii.jpeg" alt="" loading="lazy" />
+              <span class="row-text">Вильямс</span>
+              <span class="row-meta">280 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Черешня -->
+      <section class="screen" id="screen-cherry" aria-label="Черешня">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="fruits" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Черешня</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="cherrySweet">
+              <img class="row-thumb" src="https://avatars.mds.yandex.net/i?id=1cb9c2f119df9888cb95ddea5718babb98d02017-5876445-images-thumbs&n=13" alt="" loading="lazy" />
+              <span class="row-text">Сладкая черешня</span>
+              <span class="row-meta">320 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Овощи -->
+      <section class="screen" id="screen-vegetables" aria-label="Овощи">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="catalog" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Овощи</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="cucumbersSection">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/e9/33/6e/e9336ef79ce135e84a29ee4b5c1dd76a.jpg" alt="" loading="lazy" />
+              <span class="row-text">Огурцы</span>
+            </button>
+            <button type="button" class="list-row" data-nav="tomatoesSection">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/2f/d4/51/2fd4513439facfd4ec39f7a47b837cf3.jpg" alt="" loading="lazy" />
+              <span class="row-text">Помидоры</span>
+            </button>
+            <button type="button" class="list-row" data-nav="mushrooms">
+              <img class="row-thumb" src="https://i.pinimg.com/736x/6c/c2/80/6cc280869b9254182635076f425ef203.jpg" alt="" loading="lazy" />
+              <span class="row-text">Грибы</span>
+            </button>
+            <button type="button" class="list-row" data-nav="onionsSection">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/5b/6f/40/5b6f4020ad3a12d90747dc1843c25807.jpg" alt="" loading="lazy" />
+              <span class="row-text">Лук</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ОГУРЦЫ -->
+      <section class="screen" id="screen-cucumbersSection" aria-label="Огурцы">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="vegetables" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Огурцы</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="cucumberFresh">
+              <img class="row-thumb" src="https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=200&h=200&fit=crop" alt="" loading="lazy" />
+              <span class="row-text">Свежие огурцы</span>
+              <span class="row-meta">90 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="cucumberPickled">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509167489106579527/5689252fe79fea4972a964a1616ed64f.png?ex=6a183140&is=6a16dfc0&hm=11547397815f1f1d7493acc00c744d9e9c074c94a17399c82dac1fbd4a852481&" alt="" loading="lazy" />
+              <span class="row-text">Солёные огурцы</span>
+              <span class="row-meta">150 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="cucumberLong">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509167776789561374/3c1d8812277d0ba4c898c1fbc38efa61.png?ex=6a183184&is=6a16e004&hm=f905f615fd05cd8015a786dbc3ba775d7502709f0a5c15e2da176dafc8b0cce4&" alt="" loading="lazy" />
+              <span class="row-text">Длинноплодные</span>
+              <span class="row-meta">120 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ПОМИДОРЫ -->
+      <section class="screen" id="screen-tomatoesSection" aria-label="Помидоры">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="vegetables" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Помидоры</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="tomatoCherry">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509168018473750649/e346cca98d0fa035842f505995f62ddd.png?ex=6a1831be&is=6a16e03e&hm=0107a35a03032f3416c388567e10774e73df69f9c4d760c8a5fa2be4acdd0a09&" alt="" loading="lazy" />
+              <span class="row-text">Черри</span>
+              <span class="row-meta">220 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="tomatoBeef">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509168292408066088/pic_5ef8d33a6ff3def_1024x3000_1.webp.png?ex=6a1831ff&is=6a16e07f&hm=31b4370917a96e2fc843ec306ae58e5100c28439bc7dc59265d4b22b938d1f87&" alt="" loading="lazy" />
+              <span class="row-text">Биф-томаты</span>
+              <span class="row-meta">300 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="tomatoPlum">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509168504291590144/8d329a75a375b505081a6b91a15c8af4.png?ex=6a183232&is=6a16e0b2&hm=ff2478e0cf3d666859a8afc5560ae9ba2ba707f1f33f53382439dedbe1d2ab54&" alt="" loading="lazy" />
+              <span class="row-text">Сливовидные</span>
+              <span class="row-meta">180 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Грибы -->
+      <section class="screen" id="screen-mushrooms" aria-label="Грибы">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="vegetables" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Грибы</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="opata">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/16/9b/a0/169ba053c9c381295a66e14c987f8735.jpg" alt="" loading="lazy" />
+              <span class="row-text">Опята</span>
+              <span class="row-meta">450 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="chanterelle">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/1200x/6e/6a/3e/6e6a3e735932d4de17d0de3efac77965.jpg" alt="" loading="lazy" />
+              <span class="row-text">Лисички</span>
+              <span class="row-meta">520 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="fungus">
+              <div class="row-thumb row-thumb--emoji" aria-hidden="true">🍄</div>
+              <span class="row-text">Фунгус</span>
+              <span class="row-meta">2100 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ЛУК -->
+      <section class="screen" id="screen-onionsSection" aria-label="Лук">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="vegetables" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Лук</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="onionYellow">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509169201716396142/orig.png?ex=6a1832d8&is=6a16e158&hm=60d378091f4cc82dab567afc10e2506694fb82571316285f0f596d4ac2d527ad&" alt="" loading="lazy" />
+              <span class="row-text">Репчатый жёлтый</span>
+              <span class="row-meta">60 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="onionRed">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509169411511156776/7001212494.png?ex=6a18330a&is=6a16e18a&hm=00e7e85726dbfd82fffe672c5b98a0a4283d8a3ee58c8d8a73dfe44e84e4ab7a&" alt="" loading="lazy" />
+              <span class="row-text">Красный лук</span>
+              <span class="row-meta">100 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="onionGreen">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509169756014383195/c3b7b128_1707_11f1_912f_e89c25dfe098_0553c4aa_2cfc_11f1_9131_e89c25dfe098.png?ex=6a18335c&is=6a16e1dc&hm=d3f9a82704325f290ef43b77011194baad859c0a09d7e92f33feff113ab7feca&" alt="" loading="lazy" />
+              <span class="row-text">Зелёный лук</span>
+              <span class="row-meta">70 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Выпечка -->
+      <section class="screen" id="screen-bakery" aria-label="Выпечка">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="catalog" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Выпечка</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="muffinsSection">
+              <img class="row-thumb" src="https://i.pinimg.com/736x/cb/ad/ed/cbadedb7c7a8fee6271d9123a105c4e2.jpg" alt="Маффины" loading="lazy" />
+              <span class="row-text">Маффины</span>
+            </button>
+            <button type="button" class="list-row" data-nav="pastry">
+              <img class="row-thumb" src="https://i1-c.pinimg.com/736x/9a/14/a7/9a14a7f1789f9d8390f9d050cd2f142e.jpg" alt="" loading="lazy" />
+              <span class="row-text">Пирожные</span>
+            </button>
+            <button type="button" class="list-row" data-nav="piesSection">
+              <div class="row-thumb row-thumb--emoji" aria-hidden="true">🥧</div>
+              <span class="row-text">Пироги</span>
+            </button>
+            <button type="button" class="list-row" data-nav="puffSection">
+              <div class="row-thumb row-thumb--emoji" aria-hidden="true">🥐</div>
+              <span class="row-text">Слойки</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- МАФФИНЫ -->
+      <section class="screen" id="screen-muffinsSection" aria-label="Маффины">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="bakery" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Маффины</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="muffinChocolate">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509170250568962108/maxresdefault.png?ex=6a1833d2&is=6a16e252&hm=947446a53c710368c390c61a64f9ff98e168fffbc883752dee30dadc859f8b4f&" alt="" loading="lazy" />
+              <span class="row-text">Шоколадный</span>
+              <span class="row-meta">120 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="muffinBlueberry">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509170283469082664/l-intro-1766769809.png?ex=6a1833da&is=6a16e25a&hm=f932e81d7b5813cb411a6bfa6644b64ca4596fc711cd8b590be0fa21d1f1ad66&" alt="" loading="lazy" />
+              <span class="row-text">Черничный</span>
+              <span class="row-meta">130 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="muffinVanilla">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509170440361218168/maxresdefault.png?ex=6a183400&is=6a16e280&hm=735e0d9bee0c3bb966251c2769cefb094965b3c69dce2a4be6c541d99fe0bcbb&" alt="" loading="lazy" />
+              <span class="row-text">Ванильный</span>
+              <span class="row-meta">110 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Пирожные -->
+      <section class="screen" id="screen-pastry" aria-label="Пирожные">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="bakery" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Пирожные</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="beze">
+              <img class="row-thumb" src="https://i.pinimg.com/736x/82/a7/88/82a788602c64c32de29bcadc999c29fc.jpg" alt="" loading="lazy" />
+              <span class="row-text">Безе</span>
+              <span class="row-meta">210 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ПИРОГИ -->
+      <section class="screen" id="screen-piesSection" aria-label="Пироги">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="bakery" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Пироги</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="pieApple">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509170757236686908/i.png?ex=6a18344b&is=6a16e2cb&hm=86e141fc691d48a2f416bc0dbc97cea7f2406684cdb0dfaae7090bb8871a3ad5&" alt="" loading="lazy" />
+              <span class="row-text">Яблочный пирог</span>
+              <span class="row-meta">350 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="pieCherry">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509170907069808871/i.png?ex=6a18346f&is=6a16e2ef&hm=bd96e5438ce78338c1bdc8354cb2fb510233a9a2dd51b9c6350033d07e7be52f&" alt="" loading="lazy" />
+              <span class="row-text">Вишнёвый пирог</span>
+              <span class="row-meta">380 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- СЛОЙКИ -->
+      <section class="screen" id="screen-puffSection" aria-label="Слойки">
+        <header class="page-head">
+          <button type="button" class="icon-btn" data-back="bakery" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2>Слойки</h2>
+        </header>
+        <div class="scroll">
+          <div class="grid-rows">
+            <button type="button" class="list-row" data-nav="product" data-product="puffApple">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509171361883623506/i.png?ex=6a1834db&is=6a16e35b&hm=ac5bdd1db072e1c00e646bd8057e717bf3a82e461b141c3b00cac432328a9566&" alt="" loading="lazy" />
+              <span class="row-text">Слойка с яблоком</span>
+              <span class="row-meta">90 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="puffCheese">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509171932816343060/i.png?ex=6a183563&is=6a16e3e3&hm=5cefa557de3443141257fe60e7bb8e33776e39d15081b4ab4370d261ea56dad3&" alt="" loading="lazy" />
+              <span class="row-text">Слойка с сыром</span>
+              <span class="row-meta">100 р.</span>
+            </button>
+            <button type="button" class="list-row" data-nav="product" data-product="puffHam">
+              <img class="row-thumb" src="https://cdn.discordapp.com/attachments/1286992188302950474/1509172275507626085/i.png?ex=6a1835b5&is=6a16e435&hm=4c497fea9faf498d9b93137375f2a53ddfd76abf861cfff7349898dbb2666d73&" alt="" loading="lazy" />
+              <span class="row-text">Слойка с ветчиной</span>
+              <span class="row-meta">120 р.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Карточка товара -->
+      <section class="screen" id="screen-product" aria-label="Товар">
+        <header class="page-head">
+          <button type="button" class="icon-btn" id="productBackBtn" aria-label="Назад">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h2 id="productHeadTitle">Товар</h2>
+        </header>
+        <div class="scroll">
+          <div class="product-layout">
+            <img class="hero-img" id="productImg" src="" alt="" loading="lazy" />
+            <div class="detail-body">
+              <h3 id="productTitle"></h3>
+              <p id="productDesc"></p>
+              <div class="detail-actions">
+                <span class="price-tag" id="productPrice"></span>
+                <button type="button" class="btn-cart" id="addToCartBtn">Добавить в корзину</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Профиль -->
+      <section class="screen" id="screen-profile" aria-label="Профиль">
+        <header class="page-head page-head--center">
+          <h2>Профиль</h2>
+        </header>
+        <div class="scroll">
+          <div class="profile-wrap">
+            <img class="profile-avatar" src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&q=80" alt="Аватар" loading="lazy" />
+            <div class="profile-menu">
+              <button type="button" class="profile-row" data-stub="История заказов">
+                <span class="icon" aria-hidden="true">📋</span>
+                История заказов
+              </button>
+              <button type="button" class="profile-row" data-stub="Уведомления">
+                <span class="icon" aria-hidden="true">🔔</span>
+                Уведомления
+              </button>
+              <button type="button" class="profile-row" data-stub="Помощь">
+                <span class="icon" aria-hidden="true">❓</span>
+                Помощь
+              </button>
+              <button type="button" class="profile-row" data-stub="Настройки">
+                <span class="icon" aria-hidden="true">⚙️</span>
+                Настройки
+              </button>
+              <button type="button" class="profile-row" data-stub="Выход из демо">
+                <span class="icon" aria-hidden="true">🚪</span>
+                Выйти из аккаунта
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Поиск -->
+      <section class="screen" id="screen-search" aria-label="Поиск">
+        <header class="page-head page-head--center">
+          <h2>Поиск</h2>
+        </header>
+        <div class="scroll">
+          <div class="search-panel">
+            <label class="search-label" for="searchInput">Найти товар или раздел</label>
+            <input
+              id="searchInput"
+              class="search-field"
+              type="search"
+              placeholder="Например: безе, яблоки, грибы, выпечка…"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <p class="search-hint" id="searchHint">Введите запрос или выберите из подсказок ниже.</p>
+            <div id="searchResults" class="search-results" role="listbox" aria-label="Результаты поиска"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Корзина -->
+      <section class="screen" id="screen-cart" aria-label="Корзина">
+        <header class="page-head page-head--center">
+          <h2>Корзина</h2>
+        </header>
+        <div class="scroll" id="cartScroll"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    // ==================== ВСЕ СУЩЕСТВУЮЩИЕ ТОВАРЫ + НОВЫЕ ====================
+    const PRODUCTS = {
+      // Существующие товары
+      beze: {
+        title: "Безе",
+        head: "Пирожное",
+        price: "Цена : 210 р.",
+        img: "https://i.pinimg.com/736x/82/a7/88/82a788602c64c32de29bcadc999c29fc.jpg",
+        desc: "Воздушное безе из яичного белка с сахаром. Хрустящая корочка и нежная сердцевина — идеально к чаю.",
+        back: "pastry",
+        cartKey: "beze",
+        cartEmoji: null,
+        cartImg: "https://i.pinimg.com/736x/82/a7/88/82a788602c64c32de29bcadc999c29fc.jpg",
+      },
+      golden: {
+        title: "Голден",
+        head: "Яблоки",
+        price: "Цена : 400 р.",
+        img: "https://i1-c.pinimg.com/1200x/f1/6e/55/f16e5557bcf778db887703cc9db27f30.jpg",
+        desc: "Сладкие жёлтые яблоки с сочной мякотью. Отлично подходят для пирогов и свежего употребления.",
+        back: "apples",
+        cartKey: "golden",
+        cartEmoji: null,
+        cartImg: "https://i1-c.pinimg.com/1200x/f1/6e/55/f16e5557bcf778db887703cc9db27f30.jpg",
+      },
+      gala: {
+        title: "Гала",
+        head: "Яблоки",
+        price: "Цена : 350 р.",
+        img: "https://i.pinimg.com/736x/e6/68/84/e66884c2e2c257fac533eaa4f24624ab.jpg",
+        desc: "Полосатые яблоки с мягкой сладкой мякотью — один из самых популярных сортов.",
+        back: "apples",
+        cartKey: "gala",
+        cartEmoji: null,
+        cartImg: "https://i.pinimg.com/736x/e6/68/84/e66884c2e2c257fac533eaa4f24624ab.jpg",
+      },
+      antonovka: {
+        title: "Антоновка",
+        head: "Яблоки",
+        price: "Цена : 380 р.",
+        img: "https://i1-c.pinimg.com/736x/ed/4f/ee/ed4feed9ac3d7631e24aa3456bcbf7e3.jpg",
+        desc: "Классический русский сорт: кисло-сладкий вкус и аромат. Отлично подходит для печёных яблок и варенья.",
+        back: "apples",
+        cartKey: "antonovka",
+        cartEmoji: null,
+        cartImg: "https://i1-c.pinimg.com/736x/ed/4f/ee/ed4feed9ac3d7631e24aa3456bcbf7e3.jpg",
+      },
+      opata: {
+        title: "Опята",
+        head: "Грибы",
+        price: "Цена : 450 р.",
+        img: "https://i1-c.pinimg.com/736x/16/9b/a0/169ba053c9c381295a66e14c987f8735.jpg",
+        desc: "Лесные опята — ароматные грибы для жарки, супов и маринования.",
+        back: "mushrooms",
+        cartKey: "opata",
+        cartEmoji: null,
+        cartImg: "https://i1-c.pinimg.com/736x/16/9b/a0/169ba053c9c381295a66e14c987f8735.jpg",
+      },
+      chanterelle: {
+        title: "Лисички",
+        head: "Грибы",
+        price: "Цена : 520 р.",
+        img: "https://i1-c.pinimg.com/1200x/6e/6a/3e/6e6a3e735932d4de17d0de3efac77965.jpg",
+        desc: "Яркие и ароматные лисички. Нежные, с лёгким фруктовым оттенком. Идеальны для жарки и засолки.",
+        back: "mushrooms",
+        cartKey: "chanterelle",
+        cartEmoji: null,
+        cartImg: "https://i1-c.pinimg.com/1200x/6e/6a/3e/6e6a3e735932d4de17d0de3efac77965.jpg"
+      },
+      fungus: {
+        title: "Фунгус",
+        head: "Грибы",
+        price: "Цена : 2100 р.",
+        img: "https://avatars.mds.yandex.net/i?id=953411e7d01fc4ac42f5ce1a6433af8f52c1db2a-10705627-images-thumbs&n=13",
+        desc: "Загадочный гриб из измерения Risk of Rain 2. Говорят, что он восстанавливает здоровье и приносит удачу.",
+        back: "mushrooms",
+        cartKey: "fungus",
+        cartEmoji: "https://avatars.mds.yandex.net/i?id=953411e7d01fc4ac42f5ce1a6433af8f52c1db2a-10705627-images-thumbs&n=13",
+        cartImg: null,
+      },
+      conference: {
+        title: "Груши Конференция",
+        head: "Груши",
+        price: "Цена : 250 р.",
+        img: "https://avatars.mds.yandex.net/i?id=5a932a1a3eec507f7108b98897ef01f55920642d-10027404-images-thumbs&n=13",
+        desc: "Сочные и ароматные груши сорта Конференция.",
+        back: "pears",
+        cartKey: "conference",
+        cartEmoji: null,
+        cartImg: "https://avatars.mds.yandex.net/i?id=5a932a1a3eec507f7108b98897ef01f55920642d-10027404-images-thumbs&n=13",
+      },
+      williams: {
+        title: "Груши Вильямс",
+        head: "Груши",
+        price: "Цена : 280 р.",
+        img: "https://media.vprok.ru/products/x1400/ii/7z/koxqrpy346a2l2kk6ioxwhuw27mu7zii.jpeg",
+        desc: "Сладкие и нежные груши сорта Вильямс.",
+        back: "pears",
+        cartKey: "williams",
+        cartEmoji: null,
+        cartImg: "https://media.vprok.ru/products/x1400/ii/7z/koxqrpy346a2l2kk6ioxwhuw27mu7zii.jpeg",
+      },
+      cherrySweet: {
+        title: "Сладкая черешня",
+        head: "Черешня",
+        price: "Цена : 320 р.",
+        img: "https://avatars.mds.yandex.net/i?id=1cb9c2f119df9888cb95ddea5718babb98d02017-5876445-images-thumbs&n=13",
+        desc: "Спелая и сочная черешня. Идеальный летний десерт.",
+        back: "cherry",
+        cartKey: "cherrySweet",
+        cartEmoji: null,
+        cartImg: "https://avatars.mds.yandex.net/i?id=1cb9c2f119df9888cb95ddea5718babb98d02017-5876445-images-thumbs&n=13",
+      },
+
+      // ========== НОВЫЕ ТОВАРЫ ==========
+
+      // БАНАНЫ
+      bananaCavendish: {
+        title: "Кавендиш",
+        head: "Бананы",
+        price: "Цена : 120 р.",
+        img: "https://i.pinimg.com/736x/05/db/67/05db67e604541d3df9ea3706260db17d.jpg",
+        desc: "Самый популярный сорт бананов в мире. Сладкие, мягкие, богаты калием и витамином B6. Идеальны для перекуса, смузи и выпечки.",
+        back: "bananasSection",
+        cartKey: "bananaCavendish",
+        cartEmoji: null,
+        cartImg: "https://i.pinimg.com/736x/05/db/67/05db67e604541d3df9ea3706260db17d.jpg"
+      },
+      bananaMini: {
+        title: "Мини-бананы",
+        head: "Бананы",
+        price: "Цена : 180 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509166486269464617/b802d4fb1b5d435c73c30538214ad750.png?ex=6a183051&is=6a16ded1&hm=66616fa5265edc27934cbbdca67c2e31979ca795cdd0b56100d81cfa3f364c03&",
+        desc: "Маленькие сладкие бананы с насыщенным вкусом и медовым ароматом. Отлично подходят для детского питания, десертов и фруктовых салатов.",
+        back: "bananasSection",
+        cartKey: "bananaMini",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509166486269464617/b802d4fb1b5d435c73c30538214ad750.png?ex=6a183051&is=6a16ded1&hm=66616fa5265edc27934cbbdca67c2e31979ca795cdd0b56100d81cfa3f364c03&"
+      },
+      bananaRed: {
+        title: "Красные бананы",
+        head: "Бананы",
+        price: "Цена : 250 р.",
+        img: "https://images.unsplash.com/photo-1603783973258-b6e114e9f5d7?w=600&q=80",
+        desc: "Экзотические красные бананы с кремовой текстурой и лёгким малиновым оттенком. Богаты бета-каротином и витамином C. Редкий деликатес.",
+        back: "bananasSection",
+        cartKey: "bananaRed",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509166677869334638/04dca3eb5f2ed7b044bc2907182eb33f.png?ex=6a18307e&is=6a16defe&hm=17b251e6d7b15f1c1300235f4407b8907a8fa79e75ccce6c32d69345fa33a176&"
+      },
+
+      // ОГУРЦЫ
+      cucumberFresh: {
+        title: "Свежие огурцы",
+        head: "Огурцы",
+        price: "Цена : 90 р.",
+        img: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=600&q=80",
+        desc: "Хрустящие свежие огурцы с тонкой кожурой. Идеальны для салатов, окрошки и нарезки. Содержат много воды и витаминов.",
+        back: "cucumbersSection",
+        cartKey: "cucumberFresh",
+        cartEmoji: null,
+        cartImg: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=120&q=80"
+      },
+      cucumberPickled: {
+        title: "Солёные огурцы",
+        head: "Огурцы",
+        price: "Цена : 150 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509167489106579527/5689252fe79fea4972a964a1616ed64f.png?ex=6a183140&is=6a16dfc0&hm=11547397815f1f1d7493acc00c744d9e9c074c94a17399c82dac1fbd4a852481&",
+        desc: "Домашние солёные огурцы пряного посола. Хрустящие, ароматные с укропом и чесноком. Отличная закуска и ингредиент для рассольника.",
+        back: "cucumbersSection",
+        cartKey: "cucumberPickled",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509167489106579527/5689252fe79fea4972a964a1616ed64f.png?ex=6a183140&is=6a16dfc0&hm=11547397815f1f1d7493acc00c744d9e9c074c94a17399c82dac1fbd4a852481&"
+      },
+      cucumberLong: {
+        title: "Длинноплодные огурцы",
+        head: "Огурцы",
+        price: "Цена : 120 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509167776789561374/3c1d8812277d0ba4c898c1fbc38efa61.png?ex=6a183184&is=6a16e004&hm=f905f615fd05cd8015a786dbc3ba775d7502709f0a5c15e2da176dafc8b0cce4&",
+        desc: "Китайские длинные огурцы с тонкой нежной кожурой. Сладкие, без горечи, с мелкими семенами. Идеальны для азиатских салатов и роллов.",
+        back: "cucumbersSection",
+        cartKey: "cucumberLong",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509167776789561374/3c1d8812277d0ba4c898c1fbc38efa61.png?ex=6a183184&is=6a16e004&hm=f905f615fd05cd8015a786dbc3ba775d7502709f0a5c15e2da176dafc8b0cce4&"
+      },
+
+      // ПОМИДОРЫ
+      tomatoCherry: {
+        title: "Помидоры Черри",
+        head: "Помидоры",
+        price: "Цена : 220 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509168018473750649/e346cca98d0fa035842f505995f62ddd.png?ex=6a1831be&is=6a16e03e&hm=0107a35a03032f3416c388567e10774e73df69f9c4d760c8a5fa2be4acdd0a09&",
+        desc: "Маленькие сладкие помидорки черри. Идеальны для салатов, закусок и украшения блюд. Богаты ликопином и антиоксидантами.",
+        back: "tomatoesSection",
+        cartKey: "tomatoCherry",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509168018473750649/e346cca98d0fa035842f505995f62ddd.png?ex=6a1831be&is=6a16e03e&hm=0107a35a03032f3416c388567e10774e73df69f9c4d760c8a5fa2be4acdd0a09&"
+      },
+      tomatoBeef: {
+        title: "Биф-томаты",
+        head: "Помидоры",
+        price: "Цена : 300 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509168292408066088/pic_5ef8d33a6ff3def_1024x3000_1.webp.png?ex=6a1831ff&is=6a16e07f&hm=31b4370917a96e2fc843ec306ae58e5100c28439bc7dc59265d4b22b938d1f87&",
+        desc: "Крупные мясистые томаты весом до 300 грамм. Отлично подходят для бургеров, бутербродов, гриля и томатных соусов.",
+        back: "tomatoesSection",
+        cartKey: "tomatoBeef",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509168292408066088/pic_5ef8d33a6ff3def_1024x3000_1.webp.png?ex=6a1831ff&is=6a16e07f&hm=31b4370917a96e2fc843ec306ae58e5100c28439bc7dc59265d4b22b938d1f87&"
+      },
+      tomatoPlum: {
+        title: "Сливовидные помидоры",
+        head: "Помидоры",
+        price: "Цена : 180 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509168504291590144/8d329a75a375b505081a6b91a15c8af4.png?ex=6a183232&is=6a16e0b2&hm=ff2478e0cf3d666859a8afc5560ae9ba2ba707f1f33f53382439dedbe1d2ab54&",
+        desc: "Помидоры формы сливы с плотной мякотью и малым количеством семян. Идеальны для консервации, вяления и томатной пасты.",
+        back: "tomatoesSection",
+        cartKey: "tomatoPlum",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509168504291590144/8d329a75a375b505081a6b91a15c8af4.png?ex=6a183232&is=6a16e0b2&hm=ff2478e0cf3d666859a8afc5560ae9ba2ba707f1f33f53382439dedbe1d2ab54&"
+      },
+
+      // ЛУК
+      onionYellow: {
+        title: "Лук репчатый жёлтый",
+        head: "Лук",
+        price: "Цена : 60 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509169201716396142/orig.png?ex=6a1832d8&is=6a16e158&hm=60d378091f4cc82dab567afc10e2506694fb82571316285f0f596d4ac2d527ad&",
+        desc: "Классический жёлтый лук с острым вкусом. Универсальный для готовки: супы, жаркое, запеканки, маринады.",
+        back: "onionsSection",
+        cartKey: "onionYellow",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509169201716396142/orig.png?ex=6a1832d8&is=6a16e158&hm=60d378091f4cc82dab567afc10e2506694fb82571316285f0f596d4ac2d527ad&"
+      },
+      onionRed: {
+        title: "Лук красный",
+        head: "Лук",
+        price: "Цена : 100 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509169411511156776/7001212494.png?ex=6a18330a&is=6a16e18a&hm=00e7e85726dbfd82fffe672c5b98a0a4283d8a3ee58c8d8a73dfe44e84e4ab7a&",
+        desc: "Сладкий красный лук с фиолетовой шелухой. Идеален для салатов, маринования, гамбургеров и подачи к мясу. Содержит антоцианы.",
+        back: "onionsSection",
+        cartKey: "onionRed",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509169411511156776/7001212494.png?ex=6a18330a&is=6a16e18a&hm=00e7e85726dbfd82fffe672c5b98a0a4283d8a3ee58c8d8a73dfe44e84e4ab7a&"
+      },
+      onionGreen: {
+        title: "Лук зелёный",
+        head: "Лук",
+        price: "Цена : 70 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509169756014383195/c3b7b128_1707_11f1_912f_e89c25dfe098_0553c4aa_2cfc_11f1_9131_e89c25dfe098.png?ex=6a18335c&is=6a16e1dc&hm=d3f9a82704325f290ef43b77011194baad859c0a09d7e92f33feff113ab7feca&",
+        desc: "Свежий зелёный лук с ярким ароматом. Для украшения блюд, салатов, окрошки и яиц. Богат витаминами и фитонцидами.",
+        back: "onionsSection",
+        cartKey: "onionGreen",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509169756014383195/c3b7b128_1707_11f1_912f_e89c25dfe098_0553c4aa_2cfc_11f1_9131_e89c25dfe098.png?ex=6a18335c&is=6a16e1dc&hm=d3f9a82704325f290ef43b77011194baad859c0a09d7e92f33feff113ab7feca&"
+      },
+
+      // МАФФИНЫ
+      muffinChocolate: {
+        title: "Маффин шоколадный",
+        head: "Маффины",
+        price: "Цена : 120 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170250568962108/maxresdefault.png?ex=6a1833d2&is=6a16e252&hm=947446a53c710368c390c61a64f9ff98e168fffbc883752dee30dadc859f8b4f&",
+        desc: "Нежный маффин с шоколадной крошкой и какао. Влажная текстура, насыщенный шоколадный вкус. Подаётся с чаем или кофе.",
+        back: "muffinsSection",
+        cartKey: "muffinChocolate",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170250568962108/maxresdefault.png?ex=6a1833d2&is=6a16e252&hm=947446a53c710368c390c61a64f9ff98e168fffbc883752dee30dadc859f8b4f&"
+      },
+      muffinBlueberry: {
+        title: "Маффин черничный",
+        head: "Маффины",
+        price: "Цена : 130 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170283469082664/l-intro-1766769809.png?ex=6a1833da&is=6a16e25a&hm=f932e81d7b5813cb411a6bfa6644b64ca4596fc711cd8b590be0fa21d1f1ad66&",
+        desc: "Маффин с целой черникой и ванильным кремом внутри. Ягодный вкус, кисло-сладкая начинка. Подаётся с молоком.",
+        back: "muffinsSection",
+        cartKey: "muffinBlueberry",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170283469082664/l-intro-1766769809.png?ex=6a1833da&is=6a16e25a&hm=f932e81d7b5813cb411a6bfa6644b64ca4596fc711cd8b590be0fa21d1f1ad66&"
+      },
+      muffinVanilla: {
+        title: "Маффин ванильный",
+        head: "Маффины",
+        price: "Цена : 110 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170440361218168/maxresdefault.png?ex=6a183400&is=6a16e280&hm=735e0d9bee0c3bb966251c2769cefb094965b3c69dce2a4be6c541d99fe0bcbb&",
+        desc: "Классический ванильный маффин с сахарной пудрой. Воздушный, нежный, с ароматом натуральной ванили. Для любителей простых вкусов.",
+        back: "muffinsSection",
+        cartKey: "muffinVanilla",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170440361218168/maxresdefault.png?ex=6a183400&is=6a16e280&hm=735e0d9bee0c3bb966251c2769cefb094965b3c69dce2a4be6c541d99fe0bcbb&"
+      },
+
+      // ПИРОГИ
+      pieApple: {
+        title: "Яблочный пирог",
+        head: "Пироги",
+        price: "Цена : 350 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170757236686908/i.png?ex=6a18344b&is=6a16e2cb&hm=86e141fc691d48a2f416bc0dbc97cea7f2406684cdb0dfaae7090bb8871a3ad5&",
+        desc: "Домашний яблочный пирог с корицей и слоёным тестом. Хрустящая корочка, сочная начинка. Тёплые воспоминания о детстве.",
+        back: "piesSection",
+        cartKey: "pieApple",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170757236686908/i.png?ex=6a18344b&is=6a16e2cb&hm=86e141fc691d48a2f416bc0dbc97cea7f2406684cdb0dfaae7090bb8871a3ad5&"
+      },
+      pieCherry: {
+        title: "Вишнёвый пирог",
+        head: "Пироги",
+        price: "Цена : 380 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170907069808871/i.png?ex=6a18346f&is=6a16e2ef&hm=bd96e5438ce78338c1bdc8354cb2fb510233a9a2dd51b9c6350033d07e7be52f&",
+        desc: "Пирог с кисло-сладкой вишней. Песочное тесто и ягодная начинка с целыми ягодами. Классика домашней выпечки.",
+        back: "piesSection",
+        cartKey: "pieCherry",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509170907069808871/i.png?ex=6a18346f&is=6a16e2ef&hm=bd96e5438ce78338c1bdc8354cb2fb510233a9a2dd51b9c6350033d07e7be52f&"
+      },
+
+      // СЛОЙКИ
+      puffApple: {
+        title: "Слойка с яблоком",
+        head: "Слойки",
+        price: "Цена : 90 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509171361883623506/i.png?ex=6a1834db&is=6a16e35b&hm=ac5bdd1db072e1c00e646bd8057e717bf3a82e461b141c3b00cac432328a9566&",
+        desc: "Хрустящая слойка из слоёного теста с яблочной начинкой. Посыпана сахарной пудрой. Лёгкий десерт к чаю.",
+        back: "puffSection",
+        cartKey: "puffApple",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509171361883623506/i.png?ex=6a1834db&is=6a16e35b&hm=ac5bdd1db072e1c00e646bd8057e717bf3a82e461b141c3b00cac432328a9566&"
+      },
+      puffCheese: {
+        title: "Слойка с сыром",
+        head: "Слойки",
+        price: "Цена : 100 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509171932816343060/i.png?ex=6a183563&is=6a16e3e3&hm=5cefa557de3443141257fe60e7bb8e33776e39d15081b4ab4370d261ea56dad3&",
+        desc: "Солёная слойка с сыром чеддер. Подаётся к супам, бульонам, борщу. Тянущийся сыр и слоёное тесто.",
+        back: "puffSection",
+        cartKey: "puffCheese",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509171932816343060/i.png?ex=6a183563&is=6a16e3e3&hm=5cefa557de3443141257fe60e7bb8e33776e39d15081b4ab4370d261ea56dad3&"
+      },
+      puffHam: {
+        title: "Слойка с ветчиной",
+        head: "Слойки",
+        price: "Цена : 120 р.",
+        img: "https://cdn.discordapp.com/attachments/1286992188302950474/1509172275507626085/i.png?ex=6a1835b5&is=6a16e435&hm=4c497fea9faf498d9b93137375f2a53ddfd76abf861cfff7349898dbb2666d73&",
+        desc: "Сытная слойка с ветчиной и расплавленным сыром. Идеальный перекус на обед или для пикника.",
+        back: "puffSection",
+        cartKey: "puffHam",
+        cartEmoji: null,
+        cartImg: "https://cdn.discordapp.com/attachments/1286992188302950474/1509172275507626085/i.png?ex=6a1835b5&is=6a16e435&hm=4c497fea9faf498d9b93137375f2a53ddfd76abf861cfff7349898dbb2666d73&"
+      }
+    };
+
+    const screens = {
+      splash: document.getElementById("screen-splash"),
+      catalog: document.getElementById("screen-catalog"),
+      fruits: document.getElementById("screen-fruits"),
+      apples: document.getElementById("screen-apples"),
+      bananasSection: document.getElementById("screen-bananasSection"),
+      pears: document.getElementById("screen-pears"),
+      cherry: document.getElementById("screen-cherry"),
+      vegetables: document.getElementById("screen-vegetables"),
+      cucumbersSection: document.getElementById("screen-cucumbersSection"),
+      tomatoesSection: document.getElementById("screen-tomatoesSection"),
+      mushrooms: document.getElementById("screen-mushrooms"),
+      onionsSection: document.getElementById("screen-onionsSection"),
+      bakery: document.getElementById("screen-bakery"),
+      muffinsSection: document.getElementById("screen-muffinsSection"),
+      pastry: document.getElementById("screen-pastry"),
+      piesSection: document.getElementById("screen-piesSection"),
+      puffSection: document.getElementById("screen-puffSection"),
+      product: document.getElementById("screen-product"),
+      profile: document.getElementById("screen-profile"),
+      search: document.getElementById("screen-search"),
+      cart: document.getElementById("screen-cart"),
+    };
+
+    const topNav = document.getElementById("topNav");
+    const toastEl = document.getElementById("toast");
+    const cartScroll = document.getElementById("cartScroll");
+    const productBackBtn = document.getElementById("productBackBtn");
+    const productHeadTitle = document.getElementById("productHeadTitle");
+    const productImg = document.getElementById("productImg");
+    const productTitle = document.getElementById("productTitle");
+    const productDesc = document.getElementById("productDesc");
+    const productPrice = document.getElementById("productPrice");
+    const addToCartBtn = document.getElementById("addToCartBtn");
+
+    let active = "splash";
+    let productBackTarget = "pastry";
+    let currentProductId = "beze";
+    var cart = {};
+
+    var SEARCH_INDEX = [
+      { label: "Каталог", hint: "Главная витрина", screen: "catalog", hay: "каталог главная shop nimmi нимми" },
+      { label: "Фрукты", hint: "Яблоки, бананы, груши, черешня", screen: "fruits", hay: "фрукт фрукты сладкое ягоды" },
+      { label: "Овощи", hint: "Огурцы, помидоры, грибы, лук", screen: "vegetables", hay: "овощ овощи зелень салат" },
+      { label: "Выпечка", hint: "Маффины, пирожные, пироги, слойки", screen: "bakery", hay: "выпечка хлеб пекарня bakery" },
+      { label: "Яблоки", hint: "Гала, Голден, Антоновка", screen: "apples", hay: "яблоко яблоки" },
+      { label: "Бананы", hint: "Кавендиш, мини-бананы, красные бананы", screen: "bananasSection", hay: "банан бананы кавендиш мини красные" },
+      { label: "Груши", hint: "Конференция, Вильямс", screen: "pears", hay: "груша груши" },
+      { label: "Черешня", hint: "Сладкая черешня", screen: "cherry", hay: "черешня вишня ягода" },
+      { label: "Огурцы", hint: "Свежие, солёные, длинноплодные", screen: "cucumbersSection", hay: "огурец огурцы свежие солёные" },
+      { label: "Помидоры", hint: "Черри, биф-томаты, сливовидные", screen: "tomatoesSection", hay: "помидор помидоры томат черри" },
+      { label: "Грибы", hint: "Опята, лисички, фунгус", screen: "mushrooms", hay: "гриб грибы шампиньон лесные" },
+      { label: "Лук", hint: "Репчатый, красный, зелёный", screen: "onionsSection", hay: "лук репчатый красный зелёный" },
+      { label: "Пирожные", hint: "Безе", screen: "pastry", hay: "пирожное пирожные эклер тортик десерт" },
+      { label: "Маффины", hint: "Шоколадный, черничный, ванильный", screen: "muffinsSection", hay: "маффин кекс" },
+      { label: "Пироги", hint: "Яблочный, вишнёвый", screen: "piesSection", hay: "пирог пироги" },
+      { label: "Слойки", hint: "С яблоком, с сыром, с ветчиной", screen: "puffSection", hay: "слойка слоёное тесто" },
+      // Товары для поиска
+      { label: "Безе", hint: "210 р. · пирожные", product: "beze", hay: "безе меренг воздушное" },
+      { label: "Гала", hint: "350 р. · яблоки", product: "gala", hay: "гала яблоко" },
+      { label: "Голден", hint: "400 р. · яблоки", product: "golden", hay: "голден яблоко" },
+      { label: "Антоновка", hint: "380 р. · яблоки", product: "antonovka", hay: "антоновка яблоко" },
+      { label: "Опята", hint: "450 р. · грибы", product: "opata", hay: "опята грибы" },
+      { label: "Лисички", hint: "520 р. · грибы", product: "chanterelle", hay: "лисички грибы" },
+      { label: "Фунгус", hint: "2100 р. · Risk of Rain 2", product: "fungus", hay: "фунгус гриб" },
+      { label: "Конференция", hint: "250 р. · груши", product: "conference", hay: "конференция груша" },
+      { label: "Вильямс", hint: "280 р. · груши", product: "williams", hay: "вильямс груша" },
+      { label: "Черешня", hint: "320 р. · черешня", product: "cherrySweet", hay: "черешня сладкая" },
+      { label: "Кавендиш", hint: "120 р. · бананы", product: "bananaCavendish", hay: "кавендиш банан" },
+      { label: "Мини-бананы", hint: "180 р. · бананы", product: "bananaMini", hay: "мини банан" },
+      { label: "Красные бананы", hint: "250 р. · бананы", product: "bananaRed", hay: "красный банан" },
+      { label: "Свежие огурцы", hint: "90 р. · огурцы", product: "cucumberFresh", hay: "свежий огурец" },
+      { label: "Солёные огурцы", hint: "150 р. · огурцы", product: "cucumberPickled", hay: "солёный огурец" },
+      { label: "Черри", hint: "220 р. · помидоры", product: "tomatoCherry", hay: "черри помидор" },
+      { label: "Биф-томаты", hint: "300 р. · помидоры", product: "tomatoBeef", hay: "биф томат" },
+      { label: "Репчатый жёлтый", hint: "60 р. · лук", product: "onionYellow", hay: "репчатый лук" },
+      { label: "Красный лук", hint: "100 р. · лук", product: "onionRed", hay: "красный лук" },
+      { label: "Зелёный лук", hint: "70 р. · лук", product: "onionGreen", hay: "зелёный лук" },
+      { label: "Шоколадный маффин", hint: "120 р. · маффины", product: "muffinChocolate", hay: "шоколадный маффин" },
+      { label: "Черничный маффин", hint: "130 р. · маффины", product: "muffinBlueberry", hay: "черничный маффин" },
+      { label: "Яблочный пирог", hint: "350 р. · пироги", product: "pieApple", hay: "яблочный пирог" },
+      { label: "Слойка с яблоком", hint: "90 р. · слойки", product: "puffApple", hay: "слойка яблоко" }
+    ];
+
+    var searchTid;
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function itemMatches(q, it) {
+      if (!q) return true;
+      var blob = (it.label + " " + it.hint + " " + (it.hay || "")).toLowerCase();
+      return blob.indexOf(q) !== -1;
+    }
+
+    function renderSearchResults(list) {
+      var el = document.getElementById("searchResults");
+      if (!el) return;
+      if (!list.length) {
+        el.innerHTML = '<p class="search-empty">Нет результатов — попробуйте другое слово.</p>';
+        return;
+      }
+      var parts = [];
+      for (var i = 0; i < list.length; i++) {
+        var it = list[i];
+        var btn;
+        if (it.product) {
+          btn =
+            '<button type="button" class="search-hit" data-go-screen="product" data-go-product="' +
+            escapeHtml(it.product) +
+            '"><span class="search-hit__title">' +
+            escapeHtml(it.label) +
+            '</span><span class="search-hit__meta">' +
+            escapeHtml(it.hint) +
+            "</span></button>";
+        } else {
+          btn =
+            '<button type="button" class="search-hit" data-go-screen="' +
+            escapeHtml(it.screen) +
+            '"><span class="search-hit__title">' +
+            escapeHtml(it.label) +
+            '</span><span class="search-hit__meta">' +
+            escapeHtml(it.hint) +
+            "</span></button>";
+        }
+        parts.push(btn);
+      }
+      el.innerHTML = parts.join("");
+    }
+
+    function runSearchFromInputs() {
+      var si = document.getElementById("searchInput");
+      var raw = (si && si.value) || "";
+      var q = raw.trim().toLowerCase();
+      var list = !q ? SEARCH_INDEX.slice(0, 14) : SEARCH_INDEX.filter(function (it) {
+        return itemMatches(q, it);
+      });
+      renderSearchResults(list);
+      var hint = document.getElementById("searchHint");
+      if (hint) {
+        hint.textContent = !q
+          ? "Популярные разделы и товары — нажмите строку, чтобы перейти."
+          : list.length
+            ? "Найдено: " + list.length
+            : "Совпадений нет — измените запрос.";
+      }
+    }
+
+    function scheduleSearch() {
+      clearTimeout(searchTid);
+      searchTid = setTimeout(runSearchFromInputs, 120);
+    }
+
+    function showToast(text) {
+      if (!toastEl) return;
+      toastEl.textContent = text;
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(function () {
+        toastEl.classList.remove("show");
+      }, 2200);
+    }
+
+    function setNavVisible(show) {
+      if (!topNav) return;
+      topNav.classList.toggle("is-hidden", !show);
+    }
+
+    function updateTabs(forTab) {
+      if (!topNav) return;
+      for (const t of topNav.querySelectorAll(".nav-tab")) {
+        const match = t.dataset.tab === forTab;
+        t.classList.toggle("is-current", match);
+        if (match) t.setAttribute("aria-current", "page");
+        else t.removeAttribute("aria-current");
+      }
+    }
+
+    function tabForScreen(id) {
+      if (id === "profile") return "profile";
+      if (id === "cart") return "cart";
+      if (id === "search") return "search";
+      if (id !== "splash") return "catalog";
+      return null;
+    }
+
+    function setScreen(id) {
+      if (!screens[id]) return;
+      active = id;
+      for (const key of Object.keys(screens)) {
+        if (screens[key]) screens[key].classList.toggle("is-active", key === id);
+      }
+      const inApp = id !== "splash";
+      setNavVisible(inApp);
+      const tab = tabForScreen(id);
+      if (tab) updateTabs(tab);
+    }
+
+    // Функция для расчета общей суммы корзины
+    function calculateCartTotal() {
+      let total = 0;
+      for (const key in cart) {
+        const item = cart[key];
+        const price = parseInt(item.price.replace(/[^0-9]/g, ''));
+        total += price;
+      }
+      return total;
+    }
+
+    // Функция удаления товара из корзины
+    function removeFromCart(productKey) {
+      if (cart[productKey]) {
+        delete cart[productKey];
+        renderCart();
+        showToast("Товар удален из корзины");
+        localStorage.setItem("nimmi_cart", JSON.stringify(cart));
+      }
+    }
+
+    // Обновленная функция отображения корзины с кнопками удаления
+    function renderCart() {
+      if (!cartScroll) return;
+      const keys = Object.keys(cart);
+      if (keys.length === 0) {
+        cartScroll.innerHTML =
+          '<div class="cart-empty"><div class="big-icon" aria-hidden="true">🛒</div><p>Корзина пуста. Добавьте товары из каталога</p></div>';
+        return;
+      }
+      let html = '<div class="cart-list">';
+      for (const k of keys) {
+        const item = cart[k];
+        const media = item.img
+          ? `<img src="${item.img}" alt="" width="56" height="56" />`
+          : `<span class="emoji" aria-hidden="true">${item.emoji || "📦"}</span>`;
+        html += `<div class="cart-item" data-cart-key="${k}">
+          ${media}
+          <span class="name">${item.name}</span>
+          <span class="price">${item.price}</span>
+          <button type="button" class="delete-item-btn" data-delete-key="${k}">🗑 Удалить</button>
+        </div>`;
+      }
+      const total = calculateCartTotal();
+      html += `</div><div class="cart-total">Итого: <span>${total} р.</span></div>`;
+      cartScroll.innerHTML = html;
+
+      document.querySelectorAll('.delete-item-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const key = this.getAttribute('data-delete-key');
+          if (key) {
+            removeFromCart(key);
+          }
+        });
+      });
+    }
+
+    function openProduct(id) {
+      const p = PRODUCTS[id];
+      if (!p) return;
+      currentProductId = id;
+      productBackTarget = p.back;
+      productHeadTitle.textContent = p.head;
+      productImg.src = p.img;
+      productImg.alt = p.title;
+      productTitle.textContent = p.title;
+      productDesc.textContent = p.desc;
+      productPrice.textContent = p.price;
+      setScreen("product");
+    }
+
+    if (productBackBtn) {
+      productBackBtn.addEventListener("click", function () {
+        if (screens[productBackTarget]) setScreen(productBackTarget);
+        else setScreen("catalog");
+      });
+    }
+
+    document.getElementById("app").addEventListener("click", (e) => {
+      const stub = e.target.closest("[data-stub]");
+      if (stub) {
+        showToast(stub.dataset.stub + " (демо)");
+        return;
+      }
+
+      const go = e.target.closest("[data-go-screen]");
+      if (go) {
+        const gp = go.getAttribute("data-go-product");
+        if (gp && PRODUCTS[gp]) {
+          openProduct(gp);
+          return;
+        }
+        const gs = go.getAttribute("data-go-screen");
+        if (gs && screens[gs]) {
+          setScreen(gs);
+          return;
+        }
+      }
+
+      const navEl = e.target.closest("[data-nav]");
+      if (navEl) {
+        const nav = navEl.dataset.nav;
+        const msg = navEl.dataset.msg;
+        if (nav === "stub") {
+          showToast(msg || "Скоро");
+          return;
+        }
+        if (nav === "product") {
+          const pid = navEl.dataset.product;
+          if (pid && PRODUCTS[pid]) openProduct(pid);
+          return;
+        }
+        setScreen(nav);
+        return;
+      }
+
+      const backEl = e.target.closest("[data-back]");
+      if (backEl) {
+        const t = backEl.dataset.back;
+        if (screens[t]) setScreen(t);
+      }
+    });
+
+    var enterBtn = document.querySelector('[data-action="enter"]');
+    if (enterBtn) {
+      enterBtn.addEventListener("click", function () {
+        const savedCart = localStorage.getItem("nimmi_cart");
+        if (savedCart) {
+          cart = JSON.parse(savedCart);
+        }
+        renderCart();
+        setScreen("catalog");
+      });
+    }
+
+    if (topNav) {
+      topNav.addEventListener("click", (e) => {
+        const tab = e.target.closest(".nav-tab");
+        if (!tab) return;
+        const tabId = tab.dataset.tab;
+        updateTabs(tabId);
+        if (tabId === "catalog") {
+          setScreen("catalog");
+          return;
+        }
+        if (tabId === "cart") {
+          renderCart();
+          setScreen("cart");
+          return;
+        }
+        if (tabId === "profile") {
+          setScreen("profile");
+          return;
+        }
+        if (tabId === "search") {
+          setScreen("search");
+          runSearchFromInputs();
+          var si2 = document.getElementById("searchInput");
+          if (si2) {
+            setTimeout(function () {
+              si2.focus();
+            }, 80);
+          }
+        }
+      });
+    }
+
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener("click", function () {
+        const p = PRODUCTS[currentProductId];
+        if (!p) return;
+        const priceShort = p.price.replace(/^\s*Цена\s*:\s*/i, "").trim();
+        cart[p.cartKey] = {
+          name: p.title,
+          price: priceShort,
+          img: p.cartImg || null,
+          emoji: p.cartEmoji || null,
+        };
+        showToast(p.title + " добавлено в корзину");
+        renderCart();
+        localStorage.setItem("nimmi_cart", JSON.stringify(cart));
+      });
+    }
+
+    function bindSearchField(el) {
+      if (!el) return;
+      el.addEventListener("input", scheduleSearch);
+      el.addEventListener("paste", scheduleSearch);
+      el.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") {
+          clearTimeout(searchTid);
+          runSearchFromInputs();
+          var first = document.querySelector("#searchResults .search-hit");
+          if (first) first.click();
+        }
+      });
+    }
+
+    function nimmiInit() {
+      try {
+        bindSearchField(document.getElementById("searchInput"));
+        runSearchFromInputs();
+        const savedCart = localStorage.getItem("nimmi_cart");
+        if (savedCart) {
+          cart = JSON.parse(savedCart);
+        }
+        renderCart();
+      } catch (err) {
+        if (typeof console !== "undefined" && console.error) console.error(err);
+        var msg = err && err.message ? err.message : String(err);
+        var box = document.createElement("div");
+        box.setAttribute(
+          "style",
+          "position:fixed;inset:0;z-index:99999;background:#0f172a;color:#f8fafc;padding:24px;font:16px/1.5 system-ui,sans-serif;overflow:auto"
+        );
+        box.innerHTML =
+          "<h1 style=\"margin:0 0 12px;font-size:1.25rem\">NIMMI — ошибка загрузки</h1>" +
+          "<p>Не удалось выполнить скрипт страницы. Подробности:</p>" +
+          "<pre style=\"white-space:pre-wrap;background:#1e293b;padding:12px;border-radius:8px\">" +
+          String(msg).replace(/</g, "&lt;") +
+          "</pre>" +
+          "<p style=\"opacity:.85\">Обновите страницу (F5) или откройте файл через <strong>nimmi-figma.bat</strong> / <strong>nimmi-figma.ps1</strong>.</p>";
+        document.body.appendChild(box);
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", nimmiInit);
+    } else {
+      nimmiInit();
+    }
+  </script>
+</body>
+</html>
