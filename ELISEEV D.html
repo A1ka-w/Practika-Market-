@@ -1,0 +1,436 @@
+
+    const screens = {
+      splash: document.getElementById("screen-splash"),
+      catalog: document.getElementById("screen-catalog"),
+      fruits: document.getElementById("screen-fruits"),
+      apples: document.getElementById("screen-apples"),
+      bananasSection: document.getElementById("screen-bananasSection"),
+      pears: document.getElementById("screen-pears"),
+      cherry: document.getElementById("screen-cherry"),
+      vegetables: document.getElementById("screen-vegetables"),
+      cucumbersSection: document.getElementById("screen-cucumbersSection"),
+      tomatoesSection: document.getElementById("screen-tomatoesSection"),
+      mushrooms: document.getElementById("screen-mushrooms"),
+      onionsSection: document.getElementById("screen-onionsSection"),
+      bakery: document.getElementById("screen-bakery"),
+      muffinsSection: document.getElementById("screen-muffinsSection"),
+      pastry: document.getElementById("screen-pastry"),
+      piesSection: document.getElementById("screen-piesSection"),
+      puffSection: document.getElementById("screen-puffSection"),
+      product: document.getElementById("screen-product"),
+      profile: document.getElementById("screen-profile"),
+      search: document.getElementById("screen-search"),
+      cart: document.getElementById("screen-cart"),
+    };
+
+    const topNav = document.getElementById("topNav");
+    const toastEl = document.getElementById("toast");
+    const cartScroll = document.getElementById("cartScroll");
+    const productBackBtn = document.getElementById("productBackBtn");
+    const productHeadTitle = document.getElementById("productHeadTitle");
+    const productImg = document.getElementById("productImg");
+    const productTitle = document.getElementById("productTitle");
+    const productDesc = document.getElementById("productDesc");
+    const productPrice = document.getElementById("productPrice");
+    const addToCartBtn = document.getElementById("addToCartBtn");
+
+    let active = "splash";
+    let productBackTarget = "pastry";
+    let currentProductId = "beze";
+    var cart = {};
+
+    var SEARCH_INDEX = [
+      { label: "Каталог", hint: "Главная витрина", screen: "catalog", hay: "каталог главная shop nimmi нимми" },
+      { label: "Фрукты", hint: "Яблоки, бананы, груши, черешня", screen: "fruits", hay: "фрукт фрукты сладкое ягоды" },
+      { label: "Овощи", hint: "Огурцы, помидоры, грибы, лук", screen: "vegetables", hay: "овощ овощи зелень салат" },
+      { label: "Выпечка", hint: "Маффины, пирожные, пироги, слойки", screen: "bakery", hay: "выпечка хлеб пекарня bakery" },
+      { label: "Яблоки", hint: "Гала, Голден, Антоновка", screen: "apples", hay: "яблоко яблоки" },
+      { label: "Бананы", hint: "Кавендиш, мини-бананы, красные бананы", screen: "bananasSection", hay: "банан бананы кавендиш мини красные" },
+      { label: "Груши", hint: "Конференция, Вильямс", screen: "pears", hay: "груша груши" },
+      { label: "Черешня", hint: "Сладкая черешня", screen: "cherry", hay: "черешня вишня ягода" },
+      { label: "Огурцы", hint: "Свежие, солёные, длинноплодные", screen: "cucumbersSection", hay: "огурец огурцы свежие солёные" },
+      { label: "Помидоры", hint: "Черри, биф-томаты, сливовидные", screen: "tomatoesSection", hay: "помидор помидоры томат черри" },
+      { label: "Грибы", hint: "Опята, лисички, фунгус", screen: "mushrooms", hay: "гриб грибы шампиньон лесные" },
+      { label: "Лук", hint: "Репчатый, красный, зелёный", screen: "onionsSection", hay: "лук репчатый красный зелёный" },
+      { label: "Пирожные", hint: "Безе", screen: "pastry", hay: "пирожное пирожные эклер тортик десерт" },
+      { label: "Маффины", hint: "Шоколадный, черничный, ванильный", screen: "muffinsSection", hay: "маффин кекс" },
+      { label: "Пироги", hint: "Яблочный, вишнёвый", screen: "piesSection", hay: "пирог пироги" },
+      { label: "Слойки", hint: "С яблоком, с сыром, с ветчиной", screen: "puffSection", hay: "слойка слоёное тесто" },
+      // Товары для поиска
+      { label: "Безе", hint: "210 р. · пирожные", product: "beze", hay: "безе меренг воздушное" },
+      { label: "Гала", hint: "350 р. · яблоки", product: "gala", hay: "гала яблоко" },
+      { label: "Голден", hint: "400 р. · яблоки", product: "golden", hay: "голден яблоко" },
+      { label: "Антоновка", hint: "380 р. · яблоки", product: "antonovka", hay: "антоновка яблоко" },
+      { label: "Опята", hint: "450 р. · грибы", product: "opata", hay: "опята грибы" },
+      { label: "Лисички", hint: "520 р. · грибы", product: "chanterelle", hay: "лисички грибы" },
+      { label: "Фунгус", hint: "2100 р. · Risk of Rain 2", product: "fungus", hay: "фунгус гриб" },
+      { label: "Конференция", hint: "250 р. · груши", product: "conference", hay: "конференция груша" },
+      { label: "Вильямс", hint: "280 р. · груши", product: "williams", hay: "вильямс груша" },
+      { label: "Черешня", hint: "320 р. · черешня", product: "cherrySweet", hay: "черешня сладкая" },
+      { label: "Кавендиш", hint: "120 р. · бананы", product: "bananaCavendish", hay: "кавендиш банан" },
+      { label: "Мини-бананы", hint: "180 р. · бананы", product: "bananaMini", hay: "мини банан" },
+      { label: "Красные бананы", hint: "250 р. · бананы", product: "bananaRed", hay: "красный банан" },
+      { label: "Свежие огурцы", hint: "90 р. · огурцы", product: "cucumberFresh", hay: "свежий огурец" },
+      { label: "Солёные огурцы", hint: "150 р. · огурцы", product: "cucumberPickled", hay: "солёный огурец" },
+      { label: "Черри", hint: "220 р. · помидоры", product: "tomatoCherry", hay: "черри помидор" },
+      { label: "Биф-томаты", hint: "300 р. · помидоры", product: "tomatoBeef", hay: "биф томат" },
+      { label: "Репчатый жёлтый", hint: "60 р. · лук", product: "onionYellow", hay: "репчатый лук" },
+      { label: "Красный лук", hint: "100 р. · лук", product: "onionRed", hay: "красный лук" },
+      { label: "Зелёный лук", hint: "70 р. · лук", product: "onionGreen", hay: "зелёный лук" },
+      { label: "Шоколадный маффин", hint: "120 р. · маффины", product: "muffinChocolate", hay: "шоколадный маффин" },
+      { label: "Черничный маффин", hint: "130 р. · маффины", product: "muffinBlueberry", hay: "черничный маффин" },
+      { label: "Яблочный пирог", hint: "350 р. · пироги", product: "pieApple", hay: "яблочный пирог" },
+      { label: "Слойка с яблоком", hint: "90 р. · слойки", product: "puffApple", hay: "слойка яблоко" }
+    ];
+
+    var searchTid;
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function itemMatches(q, it) {
+      if (!q) return true;
+      var blob = (it.label + " " + it.hint + " " + (it.hay || "")).toLowerCase();
+      return blob.indexOf(q) !== -1;
+    }
+
+    function renderSearchResults(list) {
+      var el = document.getElementById("searchResults");
+      if (!el) return;
+      if (!list.length) {
+        el.innerHTML = '<p class="search-empty">Нет результатов — попробуйте другое слово.</p>';
+        return;
+      }
+      var parts = [];
+      for (var i = 0; i < list.length; i++) {
+        var it = list[i];
+        var btn;
+        if (it.product) {
+          btn =
+            '<button type="button" class="search-hit" data-go-screen="product" data-go-product="' +
+            escapeHtml(it.product) +
+            '"><span class="search-hit__title">' +
+            escapeHtml(it.label) +
+            '</span><span class="search-hit__meta">' +
+            escapeHtml(it.hint) +
+            "</span></button>";
+        } else {
+          btn =
+            '<button type="button" class="search-hit" data-go-screen="' +
+            escapeHtml(it.screen) +
+            '"><span class="search-hit__title">' +
+            escapeHtml(it.label) +
+            '</span><span class="search-hit__meta">' +
+            escapeHtml(it.hint) +
+            "</span></button>";
+        }
+        parts.push(btn);
+      }
+      el.innerHTML = parts.join("");
+    }
+
+    function runSearchFromInputs() {
+      var si = document.getElementById("searchInput");
+      var raw = (si && si.value) || "";
+      var q = raw.trim().toLowerCase();
+      var list = !q ? SEARCH_INDEX.slice(0, 14) : SEARCH_INDEX.filter(function (it) {
+        return itemMatches(q, it);
+      });
+      renderSearchResults(list);
+      var hint = document.getElementById("searchHint");
+      if (hint) {
+        hint.textContent = !q
+          ? "Популярные разделы и товары — нажмите строку, чтобы перейти."
+          : list.length
+            ? "Найдено: " + list.length
+            : "Совпадений нет — измените запрос.";
+      }
+    }
+
+    function scheduleSearch() {
+      clearTimeout(searchTid);
+      searchTid = setTimeout(runSearchFromInputs, 120);
+    }
+
+    function showToast(text) {
+      if (!toastEl) return;
+      toastEl.textContent = text;
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(function () {
+        toastEl.classList.remove("show");
+      }, 2200);
+    }
+
+    function setNavVisible(show) {
+      if (!topNav) return;
+      topNav.classList.toggle("is-hidden", !show);
+    }
+
+    function updateTabs(forTab) {
+      if (!topNav) return;
+      for (const t of topNav.querySelectorAll(".nav-tab")) {
+        const match = t.dataset.tab === forTab;
+        t.classList.toggle("is-current", match);
+        if (match) t.setAttribute("aria-current", "page");
+        else t.removeAttribute("aria-current");
+      }
+    }
+
+    function tabForScreen(id) {
+      if (id === "profile") return "profile";
+      if (id === "cart") return "cart";
+      if (id === "search") return "search";
+      if (id !== "splash") return "catalog";
+      return null;
+    }
+
+    function setScreen(id) {
+      if (!screens[id]) return;
+      active = id;
+      for (const key of Object.keys(screens)) {
+        if (screens[key]) screens[key].classList.toggle("is-active", key === id);
+      }
+      const inApp = id !== "splash";
+      setNavVisible(inApp);
+      const tab = tabForScreen(id);
+      if (tab) updateTabs(tab);
+    }
+
+    // Функция для расчета общей суммы корзины
+    function calculateCartTotal() {
+      let total = 0;
+      for (const key in cart) {
+        const item = cart[key];
+        const price = parseInt(item.price.replace(/[^0-9]/g, ''));
+        total += price;
+      }
+      return total;
+    }
+
+    // Функция удаления товара из корзины
+    function removeFromCart(productKey) {
+      if (cart[productKey]) {
+        delete cart[productKey];
+        renderCart();
+        showToast("Товар удален из корзины");
+        localStorage.setItem("nimmi_cart", JSON.stringify(cart));
+      }
+    }
+
+    // Обновленная функция отображения корзины с кнопками удаления
+    function renderCart() {
+      if (!cartScroll) return;
+      const keys = Object.keys(cart);
+      if (keys.length === 0) {
+        cartScroll.innerHTML =
+          '<div class="cart-empty"><div class="big-icon" aria-hidden="true">🛒</div><p>Корзина пуста. Добавьте товары из каталога</p></div>';
+        return;
+      }
+      let html = '<div class="cart-list">';
+      for (const k of keys) {
+        const item = cart[k];
+        const media = item.img
+          ? `<img src="${item.img}" alt="" width="56" height="56" />`
+          : `<span class="emoji" aria-hidden="true">${item.emoji || "📦"}</span>`;
+        html += `<div class="cart-item" data-cart-key="${k}">
+          ${media}
+          <span class="name">${item.name}</span>
+          <span class="price">${item.price}</span>
+          <button type="button" class="delete-item-btn" data-delete-key="${k}">🗑 Удалить</button>
+        </div>`;
+      }
+      const total = calculateCartTotal();
+      html += `</div><div class="cart-total">Итого: <span>${total} р.</span></div>`;
+      cartScroll.innerHTML = html;
+
+      document.querySelectorAll('.delete-item-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const key = this.getAttribute('data-delete-key');
+          if (key) {
+            removeFromCart(key);
+          }
+        });
+      });
+    }
+
+    function openProduct(id) {
+      const p = PRODUCTS[id];
+      if (!p) return;
+      currentProductId = id;
+      productBackTarget = p.back;
+      productHeadTitle.textContent = p.head;
+      productImg.src = p.img;
+      productImg.alt = p.title;
+      productTitle.textContent = p.title;
+      productDesc.textContent = p.desc;
+      productPrice.textContent = p.price;
+      setScreen("product");
+    }
+
+    if (productBackBtn) {
+      productBackBtn.addEventListener("click", function () {
+        if (screens[productBackTarget]) setScreen(productBackTarget);
+        else setScreen("catalog");
+      });
+    }
+
+    document.getElementById("app").addEventListener("click", (e) => {
+      const stub = e.target.closest("[data-stub]");
+      if (stub) {
+        showToast(stub.dataset.stub + " (демо)");
+        return;
+      }
+
+      const go = e.target.closest("[data-go-screen]");
+      if (go) {
+        const gp = go.getAttribute("data-go-product");
+        if (gp && PRODUCTS[gp]) {
+          openProduct(gp);
+          return;
+        }
+        const gs = go.getAttribute("data-go-screen");
+        if (gs && screens[gs]) {
+          setScreen(gs);
+          return;
+        }
+      }
+
+      const navEl = e.target.closest("[data-nav]");
+      if (navEl) {
+        const nav = navEl.dataset.nav;
+        const msg = navEl.dataset.msg;
+        if (nav === "stub") {
+          showToast(msg || "Скоро");
+          return;
+        }
+        if (nav === "product") {
+          const pid = navEl.dataset.product;
+          if (pid && PRODUCTS[pid]) openProduct(pid);
+          return;
+        }
+        setScreen(nav);
+        return;
+      }
+
+      const backEl = e.target.closest("[data-back]");
+      if (backEl) {
+        const t = backEl.dataset.back;
+        if (screens[t]) setScreen(t);
+      }
+    });
+
+    var enterBtn = document.querySelector('[data-action="enter"]');
+    if (enterBtn) {
+      enterBtn.addEventListener("click", function () {
+        const savedCart = localStorage.getItem("nimmi_cart");
+        if (savedCart) {
+          cart = JSON.parse(savedCart);
+        }
+        renderCart();
+        setScreen("catalog");
+      });
+    }
+
+    if (topNav) {
+      topNav.addEventListener("click", (e) => {
+        const tab = e.target.closest(".nav-tab");
+        if (!tab) return;
+        const tabId = tab.dataset.tab;
+        updateTabs(tabId);
+        if (tabId === "catalog") {
+          setScreen("catalog");
+          return;
+        }
+        if (tabId === "cart") {
+          renderCart();
+          setScreen("cart");
+          return;
+        }
+        if (tabId === "profile") {
+          setScreen("profile");
+          return;
+        }
+        if (tabId === "search") {
+          setScreen("search");
+          runSearchFromInputs();
+          var si2 = document.getElementById("searchInput");
+          if (si2) {
+            setTimeout(function () {
+              si2.focus();
+            }, 80);
+          }
+        }
+      });
+    }
+
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener("click", function () {
+        const p = PRODUCTS[currentProductId];
+        if (!p) return;
+        const priceShort = p.price.replace(/^\s*Цена\s*:\s*/i, "").trim();
+        cart[p.cartKey] = {
+          name: p.title,
+          price: priceShort,
+          img: p.cartImg || null,
+          emoji: p.cartEmoji || null,
+        };
+        showToast(p.title + " добавлено в корзину");
+        renderCart();
+        localStorage.setItem("nimmi_cart", JSON.stringify(cart));
+      });
+    }
+
+    function bindSearchField(el) {
+      if (!el) return;
+      el.addEventListener("input", scheduleSearch);
+      el.addEventListener("paste", scheduleSearch);
+      el.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") {
+          clearTimeout(searchTid);
+          runSearchFromInputs();
+          var first = document.querySelector("#searchResults .search-hit");
+          if (first) first.click();
+        }
+      });
+    }
+
+    function nimmiInit() {
+      try {
+        bindSearchField(document.getElementById("searchInput"));
+        runSearchFromInputs();
+        const savedCart = localStorage.getItem("nimmi_cart");
+        if (savedCart) {
+          cart = JSON.parse(savedCart);
+        }
+        renderCart();
+      } catch (err) {
+        if (typeof console !== "undefined" && console.error) console.error(err);
+        var msg = err && err.message ? err.message : String(err);
+        var box = document.createElement("div");
+        box.setAttribute(
+          "style",
+          "position:fixed;inset:0;z-index:99999;background:#0f172a;color:#f8fafc;padding:24px;font:16px/1.5 system-ui,sans-serif;overflow:auto"
+        );
+        box.innerHTML =
+          "<h1 style=\"margin:0 0 12px;font-size:1.25rem\">NIMMI — ошибка загрузки</h1>" +
+          "<p>Не удалось выполнить скрипт страницы. Подробности:</p>" +
+          "<pre style=\"white-space:pre-wrap;background:#1e293b;padding:12px;border-radius:8px\">" +
+          String(msg).replace(/</g, "&lt;") +
+          "</pre>" +
+          "<p style=\"opacity:.85\">Обновите страницу (F5) или откройте файл через <strong>nimmi-figma.bat</strong> / <strong>nimmi-figma.ps1</strong>.</p>";
+        document.body.appendChild(box);
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", nimmiInit);
+    } else {
+      nimmiInit();
+    }
