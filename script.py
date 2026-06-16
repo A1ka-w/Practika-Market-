@@ -173,56 +173,6 @@ def init_demo_data():
         vegetables = db.query(Category).filter(Category.slug == "vegetables").first()
         bakery = db.query(Category).filter(Category.slug == "bakery").first()
 
-        # Товары
-        products = [
-            # Фрукты
-            Product(name="Гала", slug="gala",
-                    description="Полосатые яблоки с мягкой сладкой мякотью",
-                    price=350,
-                    image_url="https://i.pinimg.com/736x/e6/68/84/e66884c2e2c257fac533eaa4f24624ab.jpg",
-                    thumbnail_url="https://i.pinimg.com/736x/e6/68/84/e66884c2e2c257fac533eaa4f24624ab.jpg",
-                    category_id=fruits.id, stock=100, sort_order=1),
-            Product(name="Голден", slug="golden",
-                    description="Сладкие жёлтые яблоки с сочной мякотью",
-                    price=400,
-                    image_url="https://i1-c.pinimg.com/1200x/f1/6e/55/f16e5557bcf778db887703cc9db27f30.jpg",
-                    thumbnail_url="https://i1-c.pinimg.com/1200x/f1/6e/55/f16e5557bcf778db887703cc9db27f30.jpg",
-                    category_id=fruits.id, stock=85, sort_order=2),
-            Product(name="Антоновка", slug="antonovka",
-                    description="Классический русский сорт: кисло-сладкий вкус",
-                    price=380,
-                    image_url="https://i1-c.pinimg.com/736x/ed/4f/ee/ed4feed9ac3d7631e24aa3456bcbf7e3.jpg",
-                    thumbnail_url="https://i1-c.pinimg.com/736x/ed/4f/ee/ed4feed9ac3d7631e24aa3456bcbf7e3.jpg",
-                    category_id=fruits.id, stock=120, sort_order=3),
-            # Овощи - Грибы
-            Product(name="Опята", slug="opata",
-                    description="Лесные опята — ароматные грибы",
-                    price=450,
-                    image_url="https://i1-c.pinimg.com/736x/16/9b/a0/169ba053c9c381295a66e14c987f8735.jpg",
-                    thumbnail_url="https://i1-c.pinimg.com/736x/16/9b/a0/169ba053c9c381295a66e14c987f8735.jpg",
-                    category_id=vegetables.id, stock=30, sort_order=1),
-            Product(name="Лисички", slug="chanterelle",
-                    description="Яркие и ароматные лисички",
-                    price=520,
-                    image_url="https://i1-c.pinimg.com/1200x/6e/6a/3e/6e6a3e735932d4de17d0de3efac77965.jpg",
-                    thumbnail_url="https://i1-c.pinimg.com/1200x/6e/6a/3e/6e6a3e735932d4de17d0de3efac77965.jpg",
-                    category_id=vegetables.id, stock=25, sort_order=2),
-            Product(name="Фунгус", slug="fungus",
-                    description="Загадочный гриб из измерения Risk of Rain 2",
-                    price=2100,
-                    image_url="https://static.wikia.nocookie.net/riskofrain2/images/3/3a/Fungus.png",
-                    thumbnail_url="https://static.wikia.nocookie.net/riskofrain2/images/3/3a/Fungus.png",
-                    category_id=vegetables.id, stock=10, sort_order=3),
-            # Выпечка
-            Product(name="Безе", slug="beze",
-                    description="Воздушное безе из яичного белка",
-                    price=210,
-                    image_url="https://i.pinimg.com/736x/82/a7/88/82a788602c64c32de29bcadc999c29fc.jpg",
-                    thumbnail_url="https://i.pinimg.com/736x/82/a7/88/82a788602c64c32de29bcadc999c29fc.jpg",
-                    category_id=bakery.id, stock=45, sort_order=1),
-        ]
-        db.add_all(products)
-        db.commit()
 
         print(f"✅ Добавлено {len(categories)} категорий и {len(products)} товаров")
 
